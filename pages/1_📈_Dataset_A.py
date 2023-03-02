@@ -121,10 +121,22 @@ with st.container():
         # tabint+1 
 
 with st.container():
-    st.header("Average first week purchase")  
+    col1, col2 = st.columns(2, gap="large")
+    col1.header("Average first booking week per season") 
+    col1.info("What is the average tiem it taskes for bookings to start per season") 
     first_Booking = summaryDF().groupby(['Season']).aggregate({'FirstBookingWeek':'mean'}).reset_index()
+    # st.table(first_Booking)
     first_Booking['FirstBookingWeek'] = round(first_Booking['FirstBookingWeek'])
-    st.bar_chart(first_Booking, x='Season', y='FirstBookingWeek')
+    first_Booking.columns = ['Season', 'First Booking Week']
+    col1.bar_chart(first_Booking, x='Season', y='First Booking Week')
+
+    col2.header("Average lask booking week per season")  
+    col2.info("What is the average tiem it taskes for bookings to end per season") 
+    first_Booking = summaryDF().groupby(['Season']).aggregate({'LastBookingWeek':'mean'}).reset_index()
+    # st.table(first_Booking)
+    first_Booking['LastBookingWeek'] = round(first_Booking['LastBookingWeek'])
+    first_Booking.columns = ['Season', 'Last Booking Week']
+    col2.bar_chart(first_Booking, x='Season', y='Last Booking Week')
 
 with st.container():
     chart = (
