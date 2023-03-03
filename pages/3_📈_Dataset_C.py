@@ -14,7 +14,7 @@ with st.container():
 def DataSetC():
     CompanyC = pd.read_csv('DatasetC.csv', low_memory=False)
     CompanyC = CompanyC[CompanyC['BookingStatus'] == 'Registered']
-    print(CompanyC.info())
+    # print(CompanyC.info())
 
     CompanyC['StatusCreatedDate'] = pd.to_datetime(CompanyC['StatusCreatedDate'], infer_datetime_format=True)
     CompanyC['StartDate'] = pd.to_datetime(CompanyC['StartDate'], infer_datetime_format=True)
