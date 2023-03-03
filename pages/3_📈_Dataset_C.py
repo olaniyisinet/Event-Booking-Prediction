@@ -12,8 +12,10 @@ with st.container():
 
 @st.cache_data
 def DataSetC():
-    CompanyC = pd.read_csv('DatasetC.csv')
+    CompanyC = pd.read_csv('DatasetC.csv', low_memory=False)
     CompanyC = CompanyC[CompanyC['BookingStatus'] == 'Registered']
+    print(CompanyC.info())
+
     CompanyC['StatusCreatedDate'] = pd.to_datetime(CompanyC['StatusCreatedDate'], infer_datetime_format=True)
     CompanyC['StartDate'] = pd.to_datetime(CompanyC['StartDate'], infer_datetime_format=True)
     CompanyC['BookingDaysToEvent'] = abs((CompanyC['StartDate'] - CompanyC['StatusCreatedDate']).dt.days)
@@ -21,7 +23,7 @@ def DataSetC():
     CompanyC['Bookingweeknumber'] =  CompanyC['eventWeeknumber'] = CompanyC.StatusCreatedDate.dt.isocalendar().week
     CompanyC['eventWeeknumber'] = CompanyC.StartDate.dt.isocalendar().week
 
-        # To create Season column
+    # To create Season column
     _condition_winter = (CompanyC.StartDate.dt.month>=1)&(CompanyC.StartDate.dt.month<=3)
     _condtion_spring = (CompanyC.StartDate.dt.month>=4)&(CompanyC.StartDate.dt.month<=6)
     _condition_summer = (CompanyC.StartDate.dt.month>=7)&(CompanyC.StartDate.dt.month<=9)
@@ -136,6 +138,4 @@ with st.container():
 # )
 # st.altair_chart(chart)
 
-
-st.table(DataSetC())
 st.button("Re-run")
