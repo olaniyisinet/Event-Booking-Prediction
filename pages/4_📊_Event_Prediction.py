@@ -12,17 +12,6 @@ with st.container():
     st.markdown("<h5 style='text-align: center; color: green'>Predict the booking for your future events using our trained AI model</h5>", unsafe_allow_html=True)
 
 
-    #Input for users to select their event date
-    d = st.date_input(
-        "When\'s your event happening? Please select the date",
-        datetime.date(2023, 4, 1))
-    st.write('Your event is happening on:', d)
-
-
-#Generating data frame
-Company = pd.DataFrame.from_dict([{"StartDate": d}])
-Company['StartDate'] = pd.to_datetime(Company['StartDate'], errors='coerce')
-
 # To create Season and season code column
 def addSeason(df):
     _condition_winter = (df.StartDate.dt.month>=1)&(df.StartDate.dt.month<=3)
@@ -64,23 +53,33 @@ def booking_features(dfs):
     return dfs
 
 
-def predictWeeksToSell():
+def predictWeeksToSell(df):
     xbg_weeks = XGBRegressor()
     # data =[{"SeasonCode":2,"eventdayofweek":3,"eventquarter":3,"eventmonth":7,"eventyear":2022,"eventdayofyear":209,"eventdayofmonth":28,"eventweekofyear":30}]
     xbg_weeks.load_model("XGBoostTotalweeks.json")
     # df = pd.DataFrame.from_dict(data)
-    df = event_features(Company).drop(labels=['StartDate', 'EventSeason'], axis=1)
-    predings = xbg_weeks.predict(df)
-    st.table(event_features(Company))
-    # return round(predings[0])
+    df2 = event_features(Company).drop(labels=['StartDate', 'EventSeason'], axis=1)
+    weekPred = xbg_weeks.predict(df2)
+    st.table(event_features(df))
+    return round(weekPred[0])
     # print(round(predings[0]))
-    st.write("Your event will be booked for ", round(predings[0]), "weeks")
+    # st.write("Your event will be booked for ", round(weekPred[0]), "weeks")
 
 # print(predictWeeksToSell())
 
 
 with st.container():
-
+    #Input for users to select their event date
+    d = st.date_input(
+        "When\'s your event happening? Please select the date",
+        datetime.date(2023, 4, 1))
+    st.write('Your event is happening on:', d)
+    
     if st.button('Click to get booking predictions'):
-        predictWeeksToSell()
-# st.on_click(predictWeeksToSell())
+        #Generating data frame
+        Company = pd.DataFrame.from_dict([{"StartDate": d}])
+        Company['StartDate'] = pd.to_datetime(d, errors='coerce')
+        predictedWeeks = predictWeeksToSell(Company)
+
+        st.write("Your event is likely to be booked for ", predictedWeeks, "weeks")
+
