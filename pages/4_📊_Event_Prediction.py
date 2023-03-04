@@ -8,9 +8,7 @@ st.set_page_config(layout = "wide")
 
 with st.container():
     st.markdown("<h1 style='text-align: center;'>Future Event Predictions</h1>", unsafe_allow_html=True)
-    # st.markdown("<h3 style='text-align: center;'>Collaborative App Development Coursework</h3>", unsafe_allow_html=True)
-    st.markdown("<h5 style='text-align: center; color: green'>Predict the booking for your future events using our trained AI model</h5>", unsafe_allow_html=True)
-
+    st.markdown("<h5 style='text-align: center; color: green'>Predict weekly booking for your future events using our trained AI model</h5>", unsafe_allow_html=True)
 
 # To create Season and season code column
 def addSeason(df):
@@ -39,33 +37,53 @@ def event_features(dfs):
     dfs['eventdayofyear'] = dfs.StartDate.dt.dayofyear
     dfs['eventdayofmonth'] = dfs.StartDate.dt.day
     dfs['eventweekofyear'] = np.uint32(np.int32(dfs.StartDate.dt.isocalendar().week))
+    dfs['StartDate'] = dfs.StartDate.dt.date
     return dfs
 
 def booking_features(dfs):
     dfs = dfs.copy()
-    dfs['bookingdayofweek'] = dfs.StatusCreatedDate.dt.dayofweek
+    dfs = addSeason(dfs)
+    dfs['bookingWeeksToEvent'] = round(abs((dfs['StartDate'] - dfs['StatusCreatedDate']).dt.days)/7,0)
     dfs['bookingquarter'] = dfs.StatusCreatedDate.dt.quarter
+    dfs['bookingweekofyear'] = np.uint32(np.int32(dfs.StatusCreatedDate.dt.isocalendar().week))
     dfs['bookingmonth'] = dfs.StatusCreatedDate.dt.month
     dfs['bookingyear'] = dfs.StatusCreatedDate.dt.year
-    dfs['bookingdayofyear'] = dfs.StatusCreatedDate.dt.dayofyear
-    dfs['bookingdayofmonth'] = dfs.StatusCreatedDate.dt.day
-    dfs['bookingweekofyear'] = dfs.StatusCreatedDate.dt.isocalendar().week
     return dfs
 
 
 def predictWeeksToSell(df):
     xbg_weeks = XGBRegressor()
-    # data =[{"SeasonCode":2,"eventdayofweek":3,"eventquarter":3,"eventmonth":7,"eventyear":2022,"eventdayofyear":209,"eventdayofmonth":28,"eventweekofyear":30}]
     xbg_weeks.load_model("XGBoostTotalweeks.json")
-    # df = pd.DataFrame.from_dict(data)
     df2 = event_features(Company).drop(labels=['StartDate', 'EventSeason'], axis=1)
     weekPred = xbg_weeks.predict(df2)
-    st.table(event_features(df))
+    # st.table(event_features(df))
     return round(weekPred[0])
-    # print(round(predings[0]))
-    # st.write("Your event will be booked for ", round(weekPred[0]), "weeks")
 
-# print(predictWeeksToSell())
+
+def generateWeeksData(eventDate, period):
+    freq = '-1W-SUN'
+    times = pd.date_range(eventDate, periods=period, freq=freq)
+    times = pd.DataFrame(reversed(times))
+    times['StartDate'] = eventDate
+    times.columns = ['StatusCreatedDate', 'StartDate']
+    times=booking_features(times)
+    return times
+
+def predictWeekyBookings(df):
+    xbg_weekly = XGBRegressor()
+    xbg_weekly.load_model("XGBoostweeklybooking.json")
+    df2 = df.drop(labels=['StatusCreatedDate', 'EventSeason',  'StartDate' ], axis=1)
+    weeklyPred = xbg_weekly.predict(df2)
+    weekly_pred_df = pd.DataFrame()
+    weekly_pred_df['Booking Week'] = df['StatusCreatedDate'].dt.date
+
+    predictions =[]
+    for row in weeklyPred:
+        if row < 0 : predictions.append(abs(round(row)))
+        else: predictions.append(abs(round(row)))
+
+    weekly_pred_df['Predictions'] = predictions
+    return weekly_pred_df
 
 
 with st.container():
@@ -80,6 +98,11 @@ with st.container():
         Company = pd.DataFrame.from_dict([{"StartDate": d}])
         Company['StartDate'] = pd.to_datetime(d, errors='coerce')
         predictedWeeks = predictWeeksToSell(Company)
-
         st.write("Your event is likely to be booked for ", predictedWeeks, "weeks")
+
+        weeks_df = pd.DataFrame(generateWeeksData(pd.to_datetime(d, errors='coerce'), predictedWeeks))
+        weeks_df_predict = predictWeekyBookings(weeks_df)
+        # st.table(weeks_df_predict)
+        st.line_chart(weeks_df_predict, x='Booking Week', y='Predictions')
+
 
