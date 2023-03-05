@@ -78,11 +78,20 @@ def predictWeekyBookings(df):
     weekly_pred_df['Booking Week'] = df['StatusCreatedDate'].dt.date
 
     predictions =[]
+    weekNumber = []
+    index = len(weeklyPred) +1
     for row in weeklyPred:
-        if row < 0 : predictions.append(abs(round(row)))
-        else: predictions.append(abs(round(row)))
+        if row < 0 : 
+            predictions.append(abs(round(row))) 
+        else: 
+            predictions.append(abs(round(row)))
+        index = index-1
+        weekNumber.append(index)
+        # index-1
 
-    weekly_pred_df['Predictions'] = predictions
+    weekly_pred_df['Weeks to event'] =weekNumber
+    weekly_pred_df['Booking Predictions'] = predictions
+
     return weekly_pred_df
 
 
@@ -102,7 +111,9 @@ with st.container():
 
         weeks_df = pd.DataFrame(generateWeeksData(pd.to_datetime(d, errors='coerce'), predictedWeeks))
         weeks_df_predict = predictWeekyBookings(weeks_df)
-        # st.table(weeks_df_predict)
-        st.line_chart(weeks_df_predict, x='Booking Week', y='Predictions')
+        st.info("Weekly booking predictions") 
+        st.dataframe(weeks_df_predict, use_container_width=True)
+        st.info("A graph showing the weekly booing predictions") 
+        st.line_chart(weeks_df_predict, x='Booking Week', y='Booking Predictions')
 
 
