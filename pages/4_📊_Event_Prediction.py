@@ -115,5 +115,6 @@ with st.container():
         st.dataframe(weeks_df_predict, use_container_width=True)
         st.info("A plotting of the weekly booing predictions") 
         st.line_chart(weeks_df_predict, x='Booking Week', y='Booking Predictions')
+        st.info("Total number of preditcted bookings: ", weeks_df_predict['Booking Predictions'].sum())
 
 
