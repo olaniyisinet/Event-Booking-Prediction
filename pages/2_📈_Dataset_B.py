@@ -109,7 +109,7 @@ with st.container():
     col1.markdown("<h5 style='text-align: center; color: red'>Average child guest bookings per weeks to events</h5>", unsafe_allow_html=True)
     col1.line_chart(Child_Guest(), x="Weeks to event", y="Average Bookings", use_container_width=True)
 
-    col2.markdown("<h5 style='text-align: center; color: red'>Average adult guest bookings per weeks to events/h5>", unsafe_allow_html=True)
+    col2.markdown("<h5 style='text-align: center; color: red'>Average adult guest bookings per weeks to events</h5>", unsafe_allow_html=True)
     col2.line_chart(Adult_Guest(), x="Weeks to event", y="Average Bookings", use_container_width=True)
 
     col2.markdown("<h5 style='text-align: center; color: red'>Average academic staff bookings per weeks to events</h5>", unsafe_allow_html=True)
@@ -136,7 +136,7 @@ with st.container():
 
 
 with st.container():
-    st.subheader("Average booking weeks per tictkey type")  
+    st.subheader("Average booking weeks per tickets type")  
     st.info("What is the average number of booking weeks per season?") 
     total_Booking = summaryDF().groupby(['TicketType']).aggregate({'TotalBookingWeeks':'mean'}).reset_index()
     total_Booking['TotalBookingWeeks'] = round(total_Booking['TotalBookingWeeks'])
