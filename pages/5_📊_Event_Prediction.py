@@ -156,6 +156,7 @@ with st.container():
         season = weeks_df['EventSeason'][0:1].values
 
         # halfway = weeks_df_predict.query("'Cummulative Booking %' >=50")
-        st.markdown("From the predictions above, it shows that your event is happening in " + season + " " + str(pd.to_datetime(d, errors='coerce').year) + ", and it will take approximately "+str(predictedWeeks) + " weeks for to get "+str(totalBookings) +
-                    " bookings. The table above shows the weekly start date, weeks to event, predicted weekly bookings, the cummulative bookings, and the percentage bookings per week, while the line chart above shows the predicted weekly bookings against the weekly dates")
+        text = "From the predictions above, it shows that your event is happening in " + season + " " + str(pd.to_datetime(d, errors='coerce').year) + ", and it will take approximately "+str(predictedWeeks) + " weeks for to get "+str(totalBookings) + " bookings. The table above shows the weekly start date, weeks to event, predicted weekly bookings, the cummulative bookings, and the percentage bookings per week, while the line chart above shows the predicted weekly bookings against the weekly dates"
+
+        st.markdown(text[0])
         st.markdown("In summary, if the cummulative Booking % does not match your booking data, you should perhaps be thinking reducing or increasind the size of your venue depending on the observed differences.")
