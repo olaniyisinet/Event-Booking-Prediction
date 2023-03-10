@@ -148,7 +148,7 @@ with st.container():
 
         st.info("Weekly booking predictions")
         st.dataframe(weeks_df_predict, use_container_width=True)
-        st.info("A plotting of the weekly booling predictions")
+        st.info("A plotting of the weekly booking predictions")
         st.line_chart(weeks_df_predict, x='Booking Weeks',
                       y='Booking Predictions')
 
