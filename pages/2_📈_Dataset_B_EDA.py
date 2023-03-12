@@ -128,7 +128,7 @@ with st.container():
     first_Booking.columns = ['Ticket Type', 'Average First Booking Week']
     col1.bar_chart(first_Booking, x='Ticket Type', y='Average First Booking Week')
 
-    col2.subheader("Average lask booking week per season")  
+    col2.subheader("Average last booking week per season")  
     col2.info("What is the average week number for the last booking?") 
 
     last_Booking = summaryDF().groupby(['Season']).aggregate({'LastBookingWeek':'mean'}).reset_index()
