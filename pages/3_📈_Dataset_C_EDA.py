@@ -1,12 +1,14 @@
+#This page contains the exploratory data analysis of dataset C. It contains graphs and charts explains the trends and pattern in the given dataset.
+
 import streamlit as st
 import pandas as pd
 import numpy as np
 
+#Setting page layout
 st.set_page_config(layout = "wide")
 
 with st.container():
     st.markdown("<h1 style='text-align: center;'>Dataset C</h1>", unsafe_allow_html=True)
-    # st.markdown("<h3 style='text-align: center;'>Collaborative App Development Coursework</h3>", unsafe_allow_html=True)
     st.markdown("<h5 style='text-align: center; color: green'>Exploratory data analysis of previous events in Dataset C</h5>", unsafe_allow_html=True)
 
 
@@ -20,7 +22,7 @@ def DataSetC():
     CompanyC['StartDate'] = pd.to_datetime(CompanyC['StartDate'], infer_datetime_format=True)
     CompanyC['BookingDaysToEvent'] = abs((CompanyC['StartDate'] - CompanyC['StatusCreatedDate']).dt.days)
     CompanyC['BookingWeeksToEvent'] = round(CompanyC['BookingDaysToEvent']/7,0)
-    CompanyC['Bookingweeknumber'] =  CompanyC['eventWeeknumber'] = CompanyC.StatusCreatedDate.dt.isocalendar().week
+    CompanyC['Bookingweeknumber'] =  CompanyC.StatusCreatedDate.dt.isocalendar().week
     CompanyC['eventWeeknumber'] = CompanyC.StartDate.dt.isocalendar().week
 
     # To create Season column

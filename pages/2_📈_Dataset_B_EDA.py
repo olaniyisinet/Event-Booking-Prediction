@@ -1,13 +1,15 @@
+#This page contains the exploratory data analysis of dataset B. It contains graphs and charts explains the trends and pattern in the given dataset.
+
 import streamlit as st
 import pandas as pd
 import numpy as np
 import altair as alt
 
+#Setting page layout
 st.set_page_config(layout = "wide")
 
 with st.container():
     st.markdown("<h1 style='text-align: center;'>Dataset B</h1>", unsafe_allow_html=True)
-    # st.markdown("<h3 style='text-align: center;'>Collaborative App Development Coursework</h3>", unsafe_allow_html=True)
     st.markdown("<h5 style='text-align: center; color: green'>Exploratory data analysis of previous events in Dataset B</h5>", unsafe_allow_html=True)
 
 
@@ -19,10 +21,10 @@ def DataSetB():
     CompanyB['StartDate'] = pd.to_datetime(CompanyB['StartDate'], infer_datetime_format=True)
     CompanyB['BookingDaysToEvent'] = abs((CompanyB['StartDate'] - CompanyB['StatusCreatedDate']).dt.days)
     CompanyB['BookingWeeksToEvent'] = round(CompanyB['BookingDaysToEvent']/7,0)
-    CompanyB['Bookingweeknumber'] =  CompanyB['eventWeeknumber'] = CompanyB.StatusCreatedDate.dt.isocalendar().week
+    CompanyB['Bookingweeknumber'] = CompanyB.StatusCreatedDate.dt.isocalendar().week
     CompanyB['eventWeeknumber'] = CompanyB.StartDate.dt.isocalendar().week
 
-        # To create Season column
+    #To create Season column
     _condition_winter = (CompanyB.StartDate.dt.month>=1)&(CompanyB.StartDate.dt.month<=3)
     _condtion_spring = (CompanyB.StartDate.dt.month>=4)&(CompanyB.StartDate.dt.month<=6)
     _condition_summer = (CompanyB.StartDate.dt.month>=7)&(CompanyB.StartDate.dt.month<=9)

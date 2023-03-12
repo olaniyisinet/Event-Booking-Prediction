@@ -1,16 +1,19 @@
+#This page contains the exploratory data analysis of dataset A. It contains graphs and charts explains the trends and pattern in the given dataset.
+
 import streamlit as st
 import pandas as pd
 import numpy as np
 import altair as alt
 
+#Setting page layout
 st.set_page_config(layout = "wide")
 
 with st.container():
     st.markdown("<h1 style='text-align: center;'>Dataset A</h1>", unsafe_allow_html=True)
-    # st.markdown("<h3 style='text-align: center;'>Collaborative App Development Coursework</h3>", unsafe_allow_html=True)
     st.markdown("<h5 style='text-align: center; color: green'>Exploratory data analysis of previous events in Dataset A</h5>", unsafe_allow_html=True)
 
 
+#Connecting to the data source csv, pre-processing and generating the data frame for visualisation
 @st.cache_data
 def DataSetA():
     CompanyA = pd.read_csv('DatasetA.csv')
@@ -19,10 +22,10 @@ def DataSetA():
     CompanyA['StartDate'] = pd.to_datetime(CompanyA['StartDate'], infer_datetime_format=True)
     CompanyA['BookingDaysToEvent'] = abs((CompanyA['StartDate'] - CompanyA['StatusCreatedDate']).dt.days)
     CompanyA['BookingWeeksToEvent'] = round(CompanyA['BookingDaysToEvent']/7,0)
-    CompanyA['Bookingweeknumber'] =  CompanyA['eventWeeknumber'] = CompanyA.StatusCreatedDate.dt.isocalendar().week
+    CompanyA['Bookingweeknumber'] =  CompanyA.StatusCreatedDate.dt.isocalendar().week
     CompanyA['eventWeeknumber'] = CompanyA.StartDate.dt.isocalendar().week
 
-        # To create Season column
+    # To create Season column
     _condition_winter = (CompanyA.StartDate.dt.month>=1)&(CompanyA.StartDate.dt.month<=3)
     _condtion_spring = (CompanyA.StartDate.dt.month>=4)&(CompanyA.StartDate.dt.month<=6)
     _condition_summer = (CompanyA.StartDate.dt.month>=7)&(CompanyA.StartDate.dt.month<=9)
@@ -33,9 +36,11 @@ def DataSetA():
     return CompanyA
 
 
+#Extracting grouped data for season and event types
 Seaons_df = DataSetA().groupby(['EventType', 'EventSeason', 'EventId', 'BookingWeeksToEvent']).aggregate({'GroupSize':'sum'}).reset_index()
-# st.table(Seaons_df)
 
+
+#Extracting grouped data for season and event types
 def summaryDF():
     min_result = DataSetA().groupby(['EventType', 'EventSeason', 'EventId']).aggregate({'GroupSize':'sum','BookingWeeksToEvent':'min'}).reset_index()
     min_result.columns = ['EventType', 'Season','EventId', 'TotalTickets', 'LastBookingWeek']
@@ -52,7 +57,6 @@ def summaryDF():
 
 
 def Autumn():
-    #Plotting average ticket Booking per season
     Autumn_df = Seaons_df[Seaons_df['EventSeason'] == 'Autumn'].groupby('BookingWeeksToEvent').mean().reset_index()
     Autumn_df.columns = ['Weeks to event', 'EventId', 'Average Bookings']
     return Autumn_df
@@ -72,9 +76,7 @@ def Winter():
     Winter_df.columns = ['Weeks to event', 'EventId', 'Average Bookings']
     return Winter_df
 
-# event_df = Seaons_df[Seaons_df['EventType'] == event].groupby('BookingWeeksToEvent').mean()
 
-# st.table(Autumn_df)
 with st.container():
     # st.header('Streamlit Colour Picker for Charts')
     # user_colour = st.color_picker(label='Choose a colour for your plot')

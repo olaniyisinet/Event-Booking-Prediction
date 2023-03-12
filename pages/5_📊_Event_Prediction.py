@@ -1,3 +1,7 @@
+# This is the page is where the event prediction happens. 
+# According to the client, the client wants to be able to tell their customers how long it will take for people to book their event, possible weekly bookings, and the percentage cumulative bookings so far. 
+# This will enable them to make necessary and informed decision on whether to increase or reduce the size of the event venue as the date of the event approaches. On this page, the client enters the event date, and clicks on the “Click to get booking predictions” button, the system evaluates and displays out weekly booking predictions in table and chart, with a little summary at the end.
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -5,6 +9,7 @@ from xgboost import XGBRegressor
 import datetime
 import time
 
+#Setting page layout
 st.set_page_config(layout="wide")
 
 with st.container():
@@ -40,6 +45,7 @@ def addSeason(df):
     return df
 
 
+#Extracting days, month, and weeks from event date
 def event_features(dfs):
     dfs = dfs.copy()
     dfs = addSeason(dfs)
@@ -156,7 +162,8 @@ with st.container():
         season = weeks_df['EventSeason'][0:1].values
 
         # halfway = weeks_df_predict.query("'Cummulative Booking %' >=50")
-        text = "From the predictions above, it shows that your event is happening in " + season + " " + str(pd.to_datetime(d, errors='coerce').year) + ", and it will take approximately "+str(predictedWeeks) + " weeks for to get "+str(totalBookings) + " bookings. The table above shows the weekly start date, weeks to event, predicted weekly bookings, the cummulative bookings, and the percentage bookings per week, while the line chart above shows the predicted weekly bookings against the weekly dates"
+        text = "From the predictions above, it shows that your event is happening in " + season + " " + str(pd.to_datetime(d, errors='coerce').year) + ", and it will take approximately "+str(predictedWeeks) + " weeks for to get "+str(
+            totalBookings) + " bookings. The table above shows the weekly start date, weeks to event, predicted weekly bookings, the cummulative bookings, and the percentage bookings per week, while the line chart above shows the predicted weekly bookings against the weekly dates"
 
         st.markdown(text[0])
         st.markdown("In summary, if the cummulative Booking % does not match your booking data, you should perhaps be thinking reducing or increasind the size of your venue depending on the observed differences.")
