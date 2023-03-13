@@ -59,14 +59,14 @@ def DataSetB():
     CompanyB['TicketType']=CompanyB['TicketType'].replace('Academic Ticket','Academic Staff')
     CompanyB['TicketType']=CompanyB['TicketType'].replace('Teaching Centre Staff','Academic Staff')
     CompanyB['TicketType']=CompanyB['TicketType'].replace('Any day', 'Standard')
-    CompanyB['TicketType']=CompanyB['TicketType'].replace('Standard', 'Graudants')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('Standard', 'Graduands')
 
     return CompanyB
 
 Seaons_df = DataSetB().groupby(['EventSeason', 'EventId', 'BookingWeeksToEvent', 'TicketType']).aggregate({'GroupSize':'count'}).reset_index()
 
 
-#Extracting grouped data for season and event types
+#Extracting grouped data for season, event types, and booking weeks to event
 def summaryDF():
     min_result = DataSetB().groupby([ 'EventSeason', 'EventId', 'TicketType']).aggregate({'GroupSize':'sum','BookingWeeksToEvent':'min'}).reset_index()
     min_result.columns = [ 'Season','EventId', 'TicketType','TotalBookings', 'LastBookingWeek']
