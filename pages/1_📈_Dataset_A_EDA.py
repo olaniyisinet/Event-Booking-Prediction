@@ -36,7 +36,7 @@ def DataSetA():
     return CompanyA
 
 
-#Extracting grouped data for season and event types
+#Extracting grouped data for season, event types, and booking weeks to event
 Seaons_df = DataSetA().groupby(['EventType', 'EventSeason', 'EventId', 'BookingWeeksToEvent']).aggregate({'GroupSize':'sum'}).reset_index()
 
 
@@ -56,30 +56,33 @@ def summaryDF():
     return result_df
 
 
+#Creating a DF for average bookings in Autumn
 def Autumn():
     Autumn_df = Seaons_df[Seaons_df['EventSeason'] == 'Autumn'].groupby('BookingWeeksToEvent').mean().reset_index()
     Autumn_df.columns = ['Weeks to event', 'EventId', 'Average Bookings']
     return Autumn_df
 
+#Creating a DF for average bookings in Spring
 def Spring():
     Spring_df = Seaons_df[Seaons_df['EventSeason'] == 'Spring'].groupby('BookingWeeksToEvent').mean().reset_index()
     Spring_df.columns = ['Weeks to event', 'EventId', 'Average Bookings']
     return Spring_df
 
+#Creating a DF for average bookings in Summer
 def Summer():
     Summer_df = Seaons_df[Seaons_df['EventSeason'] == 'Summer'].groupby('BookingWeeksToEvent').mean().reset_index()
     Summer_df.columns = ['Weeks to event', 'EventId', 'Average Bookings']
     return Summer_df
 
+#Creating a DF for average bookings in Winter
 def Winter():
     Winter_df = Seaons_df[Seaons_df['EventSeason'] == 'Winter'].groupby('BookingWeeksToEvent').mean().reset_index()
     Winter_df.columns = ['Weeks to event', 'EventId', 'Average Bookings']
     return Winter_df
 
 
+#Container to plot all the graphs
 with st.container():
-    # st.header('Streamlit Colour Picker for Charts')
-    # user_colour = st.color_picker(label='Choose a colour for your plot')
     st.subheader("Average Booking by Seasons")  
     st.info("What are the average number of bookings for each week before the event for every season?") 
 
@@ -104,7 +107,6 @@ with st.container():
 
     eventsTypes = list(Seaons_df['EventType'].unique())
     tablable = eventsTypes
-    # tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12 = st.tabs(eventsTypes)
 
     tablable = st.tabs(eventsTypes)
 
@@ -113,23 +115,15 @@ with st.container():
         event_df = Seaons_df[Seaons_df['EventType'] == event].groupby('BookingWeeksToEvent').mean().reset_index()
         event_df.columns = ['Weeks To Event', 'EventId', 'Group Size']
         event_df['Weeks To Event'] = round(event_df['Weeks To Event'],0)
-        # st.table(event_df)
-        # print(tabs)
         tablable[id].markdown("<h5 style='text-align: left; color: blue'>Average weekly bookings for " +event+"</h5>", unsafe_allow_html=True)
-
-        # fig, ax = plt.subplots()
-        # ax.lines(x=event_df['Weeks To Event'], y=event_df['Group Size'], c=user_colour)
-        # tablable[id].pyplot(fig)
-
         tablable[id].line_chart(event_df, x="Weeks To Event", y="Group Size", use_container_width=True)
-        # tabint+1 
+
 
 with st.container():
     col1, col2 = st.columns(2, gap="large")
     col1.subheader("Average first booking week per season") 
     col1.info("What is the average time it taskes for bookings to start per season?") 
     first_Booking = summaryDF().groupby(['Season']).aggregate({'FirstBookingWeek':'mean'}).reset_index()
-    # st.table(first_Booking)
     first_Booking['FirstBookingWeek'] = round(first_Booking['FirstBookingWeek'])
     first_Booking.columns = ['Season', 'Average First Booking Week']
     col1.bar_chart(first_Booking, x='Season', y='Average First Booking Week')
@@ -137,7 +131,6 @@ with st.container():
     col2.subheader("Average last booking week per season")  
     col2.info("What is the average week number for the last booking?") 
     last_Booking = summaryDF().groupby(['Season']).aggregate({'LastBookingWeek':'mean'}).reset_index()
-    # st.table(first_Booking)
     last_Booking['LastBookingWeek'] = round(last_Booking['LastBookingWeek'])
     last_Booking.columns = ['Season', 'Average Last Booking Week']
     col2.bar_chart(last_Booking, x='Season', y='Average Last Booking Week')
@@ -150,19 +143,5 @@ with st.container():
     total_Booking['TotalWeeksToSell'] = round(total_Booking['TotalWeeksToSell'])
     total_Booking.columns = ['Season', 'Average Booking Weeks']
     st.bar_chart(total_Booking, x='Season', y='Average Booking Weeks')
-
-# with st.container():
-#     chart = (
-#     alt.Chart(summaryDF())
-#     .mark_bar()
-#     .encode(
-#         alt.X("Season:O"),
-#         alt.Y("TotalWeeksToSell"),
-#         alt.Color("Nucleotide:O"),
-#         alt.Tooltip(["Season", "TotalWeeksToSell"]),
-#     )
-#     .interactive()
-# )
-# st.altair_chart(chart)
 
 st.button("Re-run")

@@ -12,6 +12,7 @@ with st.container():
     st.markdown("<h5 style='text-align: center; color: green'>Exploratory data analysis of previous events in Dataset C</h5>", unsafe_allow_html=True)
 
 
+#Connecting to the data source csv, pre-processing and generating the data frame for visualisation
 @st.cache_data
 def DataSetC():
     CompanyC = pd.read_csv('DatasetC.csv', low_memory=False)
@@ -36,9 +37,12 @@ def DataSetC():
     return CompanyC
 
 
+#Extracting grouped data for season, event types, and booking weeks to event
 Seaons_df = DataSetC().groupby(['EventSeason', 'EventId', 'BookingWeeksToEvent']).aggregate({'GroupSize':'sum'}).reset_index()
 # st.table(Seaons_df)
 
+
+#Extracting grouped data for season and event types
 def summaryDF():
     min_result = DataSetC().groupby(['EventSeason', 'EventId']).aggregate({'GroupSize':'sum','BookingWeeksToEvent':'min'}).reset_index()
     min_result.columns = [ 'Season','EventId', 'TotalTickets', 'LastBookingWeek']
@@ -54,22 +58,25 @@ def summaryDF():
     return result_df
 
 
+#Creating a DF for average bookings in Autumn
 def Autumn():
-    #Plotting average ticket Booking per season
     Autumn_df = Seaons_df[Seaons_df['EventSeason'] == 'Autumn'].groupby('BookingWeeksToEvent').mean().reset_index()
     Autumn_df.columns = ['Weeks to event', 'EventId', 'Average Bookings']
     return Autumn_df
 
+#Creating a DF for average bookings in Spring
 def Spring():
     Spring_df = Seaons_df[Seaons_df['EventSeason'] == 'Spring'].groupby('BookingWeeksToEvent').mean().reset_index()
     Spring_df.columns = ['Weeks to event', 'EventId', 'Average Bookings']
     return Spring_df
 
+#Creating a DF for average bookings in Summer
 def Summer():
     Summer_df = Seaons_df[Seaons_df['EventSeason'] == 'Summer'].groupby('BookingWeeksToEvent').mean().reset_index()
     Summer_df.columns = ['Weeks to event', 'EventId', 'Average Bookings']
     return Summer_df
 
+#Creating a DF for average bookings in Winter
 def Winter():
     Winter_df = Seaons_df[Seaons_df['EventSeason'] == 'Winter'].groupby('BookingWeeksToEvent').mean().reset_index()
     Winter_df.columns = ['Weeks to event', 'EventId', 'Average Bookings']

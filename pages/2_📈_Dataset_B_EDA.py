@@ -13,6 +13,7 @@ with st.container():
     st.markdown("<h5 style='text-align: center; color: green'>Exploratory data analysis of previous events in Dataset B</h5>", unsafe_allow_html=True)
 
 
+#Connecting to the data source csv, pre-processing and generating the data frame for visualisation
 @st.cache_data
 def DataSetB():
     CompanyB = pd.read_csv('DatasetB.csv')
@@ -64,6 +65,8 @@ def DataSetB():
 
 Seaons_df = DataSetB().groupby(['EventSeason', 'EventId', 'BookingWeeksToEvent', 'TicketType']).aggregate({'GroupSize':'count'}).reset_index()
 
+
+#Extracting grouped data for season and event types
 def summaryDF():
     min_result = DataSetB().groupby([ 'EventSeason', 'EventId', 'TicketType']).aggregate({'GroupSize':'sum','BookingWeeksToEvent':'min'}).reset_index()
     min_result.columns = [ 'Season','EventId', 'TicketType','TotalBookings', 'LastBookingWeek']
@@ -76,28 +79,32 @@ def summaryDF():
     return result_df
 
 
+#Creating a DF for average bookings for graduants
 def Graduants():
-    #Plotting average ticket type Booking
     Graudants_df = Seaons_df[Seaons_df['TicketType'] == 'Graudants'].groupby('BookingWeeksToEvent').mean().reset_index()
     Graudants_df.columns = ['Weeks to event', 'EventId', 'Average Bookings']
     return Graudants_df
    
+#Creating a DF for average bookings for all child guests
 def Child_Guest():
     Child_Guest_df = Seaons_df[Seaons_df['TicketType'] == 'Child Guest'].groupby('BookingWeeksToEvent').mean().reset_index()
     Child_Guest_df.columns = ['Weeks to event', 'EventId', 'Average Bookings']
     return Child_Guest_df
 
+#Creating a DF for average bookings for all adult guests
 def Adult_Guest():
     Adult_Guest_df = Seaons_df[Seaons_df['TicketType'] == 'Adult Guest'].groupby('BookingWeeksToEvent').mean().reset_index()
     Adult_Guest_df.columns = ['Weeks to event', 'EventId', 'Average Bookings']
     return Adult_Guest_df
 
+#Creating a DF for average bookings for all academic staff
 def Academic_Staff():
     Academic_Staff_df = Seaons_df[Seaons_df['TicketType'] == 'Academic Staff'].groupby('BookingWeeksToEvent').mean().reset_index()
     Academic_Staff_df.columns = ['Weeks to event', 'EventId', 'Average Bookings']
     return Academic_Staff_df
 
 
+#Container to plot all the graphs
 with st.container():
 
     st.subheader("Average Booking by Ticket Types")  
