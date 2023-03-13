@@ -34,32 +34,32 @@ def DataSetB():
     CompanyB['EventSeason'] = np.where(_condition_winter,'Winter',np.where(_condtion_spring,'Spring',np.where(_condition_summer,'Summer',np.where(_condition_autumn,'Autumn',np.nan))))
 
     #Cleaining up the ticket type
-    CompanyB['TicketType'].replace('AM Ceremony','Standard')
-    CompanyB['TicketType'].replace('Child (AM ceremony)','Child Guest')
-    CompanyB['TicketType'].replace('Child (PM ceremony)','Child Guest')
-    CompanyB['TicketType'].replace('Evening dinner ','Adult Guest')
-    CompanyB['TicketType'].replace('Guest AM Ceremony','Adult Guest')
-    CompanyB['TicketType'].replace('Guest PM Ceremony','Adult Guest')
-    CompanyB['TicketType'].replace('PM Ceremony ','Adult Guest')
-    CompanyB['TicketType'].replace('PM Ceremony','Adult Guest')
-    CompanyB['TicketType'].replace('121 Session','Standard')
-    CompanyB['TicketType'].replace('14:30 Ceremony','Standard')
-    CompanyB['TicketType'].replace('11:00 Ceremony','Standard')
-    CompanyB['TicketType'].replace('Guest 14:30 Ceremony','Adult Guest')
-    CompanyB['TicketType'].replace('Guest 17:00 Ceremony','Adult Guest')
-    CompanyB['TicketType'].replace('Guest 11:00 Ceremony','Adult Guest')
-    CompanyB['TicketType'].replace('17:00 Ceremony','Standard')
-    CompanyB['TicketType'].replace('13th Ceremony','Standard')
-    CompanyB['TicketType'].replace('14th Ceremony','Standard')
-    CompanyB['TicketType'].replace('15th Ceremony','Standard')
-    CompanyB['TicketType'].replace('Guest 13th Ceremony','Adult Guest')
-    CompanyB['TicketType'].replace('Guest 14th Ceremony','Adult Guest')
-    CompanyB['TicketType'].replace('Guest 15th Ceremony','Adult Guest')
-    CompanyB['TicketType'].replace('3 day ticket am/pm','Standard')
-    CompanyB['TicketType'].replace('Academic Ticket','Academic Staff')
-    CompanyB['TicketType'].replace('Teaching Centre Staff','Academic Staff')
-    CompanyB['TicketType'].replace('Any day', 'Standard')
-    CompanyB['TicketType'].replace('Standard', 'Graduands')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('AM Ceremony','Standard')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('Child (AM ceremony)','Child Guest')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('Child (PM ceremony)','Child Guest')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('Evening dinner ','Adult Guest')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('Guest AM Ceremony','Adult Guest')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('Guest PM Ceremony','Adult Guest')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('PM Ceremony ','Adult Guest')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('PM Ceremony','Adult Guest')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('121 Session','Standard')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('14:30 Ceremony','Standard')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('11:00 Ceremony','Standard')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('Guest 14:30 Ceremony','Adult Guest')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('Guest 17:00 Ceremony','Adult Guest')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('Guest 11:00 Ceremony','Adult Guest')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('17:00 Ceremony','Standard')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('13th Ceremony','Standard')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('14th Ceremony','Standard')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('15th Ceremony','Standard')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('Guest 13th Ceremony','Adult Guest')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('Guest 14th Ceremony','Adult Guest')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('Guest 15th Ceremony','Adult Guest')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('3 day ticket am/pm','Standard')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('Academic Ticket','Academic Staff')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('Teaching Centre Staff','Academic Staff')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('Any day', 'Standard')
+    CompanyB['TicketType']=CompanyB['TicketType'].replace('Standard', 'Graduands')
 
     return CompanyB
 
@@ -81,9 +81,9 @@ def summaryDF():
 
 #Creating a DF for average bookings for graduants
 def Graduants():
-    Graudants_df = Seaons_df[Seaons_df['TicketType'] == 'Graudants'].groupby('BookingWeeksToEvent').mean().reset_index()
-    Graudants_df.columns = ['Weeks to event', 'EventId', 'Average Bookings']
-    return Graudants_df
+    Graduands_df = Seaons_df[Seaons_df['TicketType'] == 'Graduands'].groupby('BookingWeeksToEvent').mean().reset_index()
+    Graduands_df.columns = ['Weeks to event', 'EventId', 'Average Bookings']
+    return Graduands_df
    
 #Creating a DF for average bookings for all child guests
 def Child_Guest():
@@ -112,7 +112,7 @@ with st.container():
 
     col1, col2 = st.columns(2, gap="large")
 
-    col1.markdown("<h5 style='text-align: center; color: red'>Average graduants bookings per weeks to events</h5>", unsafe_allow_html=True)
+    col1.markdown("<h5 style='text-align: center; color: red'>Average graduands bookings per weeks to events</h5>", unsafe_allow_html=True)
     col1.line_chart(Graduants(), x="Weeks to event", y="Average Bookings", use_container_width=True)
 
     col1.markdown("<h5 style='text-align: center; color: red'>Average child guest bookings per weeks to events</h5>", unsafe_allow_html=True)
