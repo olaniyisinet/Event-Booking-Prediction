@@ -103,7 +103,7 @@ def predictWeekyBookings(df):
 
 def generateDays():
     days =[]
-    for i in range(1, 30):
+    for i in range(1, 31):
         days.append(i)
     days.reverse()
     return days
