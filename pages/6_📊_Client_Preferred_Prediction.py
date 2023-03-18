@@ -14,7 +14,7 @@ st.set_page_config(layout="wide")
 
 with st.container():
     st.markdown("<h1 style='text-align: center;'>Event Booking Predictions</h1>", unsafe_allow_html=True)
-    st.markdown("<h5 style='text-align: center; color: green'>Predict weekly bookings for your future events using our trained AI model</h5>", unsafe_allow_html=True)
+    st.markdown("<h5 style='text-align: center; color: green'>Predict weekly bookings for your future events using our trained AI model and select your prefered booking period</h5>", unsafe_allow_html=True)
 
 
 # To create Season and season code column
@@ -63,14 +63,6 @@ def booking_features(dfs):
     return dfs
 
 
-def predictWeeksToSell(df):
-    xbg_weeks = XGBRegressor()
-    xbg_weeks.load_model("XGBoostTotalweeks.json")
-    df2 = event_features(Company).drop(labels=['StartDate', 'EventSeason'], axis=1)
-    weekPred = xbg_weeks.predict(df2)
-    return round(weekPred[0])
-
-
 def generateWeeksData(eventDate, period):
     freq = '-1W-SUN'
     times = pd.date_range(eventDate, periods=period, freq=freq)
@@ -102,12 +94,19 @@ def predictWeekyBookings(df):
 
     weekly_pred_df['Weeks to event'] = weekNumber
     weekly_pred_df['Booking Predictions'] = predictions
-    weekly_pred_df['Cummulative Total Prediction'] = pd.Series(
+    weekly_pred_df['Cumm. Total Prediction'] = pd.Series(
         predictions).cumsum()
-    weekly_pred_df['Cummulative Booking %'] = round(
-        (weekly_pred_df['Cummulative Total Prediction'] / weekly_pred_df['Booking Predictions'] .sum()) * 100, 0)
+    weekly_pred_df['Cumm. Booking %'] = round(
+        (weekly_pred_df['Cumm. Total Prediction'] / weekly_pred_df['Booking Predictions'] .sum()) * 100, 0)
 
     return weekly_pred_df
+
+def generateDays():
+    days =[]
+    for i in range(1, 30):
+        days.append(i)
+    days.reverse()
+    return days
 
 def choosenPeriod(option):
     weeks_df = pd.DataFrame(generateWeeksData(pd.to_datetime(d, errors='coerce'), option))
@@ -137,28 +136,31 @@ def choosenPeriod(option):
         st.markdown("However, if the cummulative booking is lower than your booking data after 70% of the booking period, you should perhaps start thinking of increasing the size of your venue depending on the observed differences.")
 
 
+
 with st.container():
+    col1, col2 = st.columns(2)
     # Input for users to select their event date
-    d = st.date_input(
+    d = col1.date_input(
         "When\'s your event happening? Please select the date",
         datetime.date(2023, 4, 1))
-    st.write('Your event is happening on:', d)
+
+    option = col2.selectbox('Please select your prefered booking period',
+                    generateDays())
 
     if st.button('Click to get booking predictions'):
         with st.spinner('Generating predictions. Please wait....'):
             time.sleep(1)
         Company = pd.DataFrame.from_dict([{"StartDate": d}])
         Company['StartDate'] = pd.to_datetime(d, errors='coerce')
-        predictedWeeks = predictWeeksToSell(Company)
 
-        weeks_df = pd.DataFrame(generateWeeksData(pd.to_datetime(d, errors='coerce'), predictedWeeks))
+        weeks_df = pd.DataFrame(generateWeeksData(pd.to_datetime(d, errors='coerce'), option))
         weeks_df_predict = predictWeekyBookings(weeks_df)
 
         st.balloons()
 
         totalBookings = weeks_df_predict['Booking Predictions'].sum()
-        st.success("Based on the predicted values below, your event is likely to be booked for " + str(predictedWeeks) +
-                   " weeks, and the total number of preditcted bookings for your event is: " + str(totalBookings), icon="ℹ️")
+        st.success("Based on your selected booking period of "+ str(option) +
+                   " weeks, the total number of preditcted bookings for your event is: " + str(totalBookings), icon="ℹ️")
 
         with st.container():
             # col1, col2 = st.columns(2)
@@ -166,16 +168,3 @@ with st.container():
             st.dataframe(weeks_df_predict, use_container_width=True)
             st.info("A plotting of the weekly booking predictions")
             st.line_chart(weeks_df_predict, x='Booking Weeks', y='Booking Predictions')
-
-        with st.container():
-            st.success("Summary")
-            season = weeks_df['EventSeason'][0:1].values
-
-            text = "From the predictions above, it shows that your event is happening in " + season + " " + str(pd.to_datetime(d, errors='coerce').year) + ", and it will take approximately "+str(predictedWeeks) + " weeks to get "+str(
-                totalBookings) + " bookings. The table above shows the weekly start date, weeks to event, predicted weekly bookings, the cummulative bookings, and the percentage bookings per week, while the line chart above shows the predicted weekly bookings against the weekly dates"
-
-            st.markdown(text[0])
-            st.markdown("In summary, if the cummulative booking is higher than your booking data after 70% of the booking period, you should perhaps start thinking of promotion or reducing the size of your venue depending on the observed differences.")
-            st.markdown("However, if the cummulative booking is lower than your booking data after 70% of the booking period, you should perhaps start thinking of increasing the size of your venue depending on the observed differences.")
-
-            st.markdown("Please note that these predictions are based off if you didnt do any additional promotions along the line.")
