@@ -13,7 +13,7 @@ import time
 st.set_page_config(layout="wide")
 
 with st.container():
-    st.markdown("<h1 style='text-align: center;'>Event Booking Predictions</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>Client Preferred Booking Predictions</h1>", unsafe_allow_html=True)
     st.markdown("<h5 style='text-align: center; color: green'>Predict weekly bookings for your future events using our trained AI model and select your prefered booking period</h5>", unsafe_allow_html=True)
 
 
