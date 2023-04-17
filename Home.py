@@ -13,10 +13,12 @@ st.markdown(
 
     ### What each menu will display?
 
-    - Dataset A: Charts, graphs, and explaination of what dataset A contains and it can be useful
-    - Dataset B: Charts, graphs, and explaination of what dataset B contains and it can be useful
-    - Dataset C: Charts, graphs, and explaination of what dataset C contains and it can be useful
+    - Dataset A: Charts, graphs, and explaination of what dataset A contains and it can be useful.
+    - Dataset B: Charts, graphs, and explaination of what dataset B contains and it can be useful.
+    - Dataset C: Charts, graphs, and explaination of what dataset C contains and it can be useful.
     - Event Prediction: Prediction furture events with our trained model from the dataset provided.
+    - Client Prefered Prediction: Prediction furture events givign the client the ability to select a prefered booking period.
+
 """
 )
 
