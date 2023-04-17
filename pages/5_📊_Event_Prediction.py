@@ -141,7 +141,7 @@ with st.container():
     # Input for users to select their event date
     d = st.date_input(
         "When\'s your event happening? Please select the date",
-        datetime.date(2023, 4, 1))
+        datetime.date(2023, 5, 1))
     st.write('Your event is happening on:', d)
 
     if st.button('Click to get booking predictions'):
@@ -175,5 +175,5 @@ with st.container():
                 totalBookings) + " bookings. The table above shows the weekly start date, weeks to event, predicted weekly bookings, the cummulative bookings, and the percentage bookings per week, while the line chart above shows the predicted weekly bookings against the weekly dates"
 
             st.markdown(text[0])
-            st.markdown("In summary, if the cummulative booking is higher or lower than your actual booking data after 70% of the booking period, you should perhaps start thinking of promotion or reducing the size of your venue depending on the observed differences.")
+            st.markdown("In summary, if the cummulative booking is higher or lower than your actual booking data after 70% of the booking period, you should perhaps start thinking of promotion or reducing the size of your venue depending on the observed differences, and vice-versa")
             st.markdown("Please note that these predictions are based off if you didnt do any additional promotions along the line.")

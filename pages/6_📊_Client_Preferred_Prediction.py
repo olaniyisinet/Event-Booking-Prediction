@@ -103,7 +103,7 @@ def predictWeekyBookings(df):
 
 def generateDays():
     days =[]
-    for i in range(1, 31):
+    for i in range(1, 52):
         days.append(i)
     days.reverse()
     return days
@@ -140,7 +140,7 @@ with st.container():
     # Input for users to select their event date
     d = col1.date_input(
         "When\'s your event happening? Please select the date",
-        datetime.date(2023, 4, 1))
+        datetime.date(2023, 5, 1))
 
     option = col2.selectbox('Please select your prefered booking period',
                     generateDays())
