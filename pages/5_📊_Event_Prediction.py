@@ -109,34 +109,6 @@ def predictWeekyBookings(df):
 
     return weekly_pred_df
 
-# def choosenPeriod(option):
-#     weeks_df = pd.DataFrame(generateWeeksData(pd.to_datetime(d, errors='coerce'), option))
-#     weeks_df_predict = predictWeekyBookings(weeks_df)
-
-#     st.balloons()
-
-#     totalBookings = weeks_df_predict['Booking Predictions'].sum()
-#     st.success("Based on the selected booking period, total preditcted bookings for your event is: " + str(totalBookings), icon="ℹ️")
-
-#     with st.container():
-#         col1, col2 = st.columns(2)
-#         col1.info("Weekly booking predictions")
-#         col1.dataframe(weeks_df_predict, use_container_width=True)
-#         col2.info("A plotting of the weekly booking predictions")
-#         col2.line_chart(weeks_df_predict, x='Booking Weeks', y='Booking Predictions')
-
-#     with st.container():
-#         st.success("Summary")
-#         season = weeks_df['EventSeason'][0:1].values
-
-#         text = "From the predictions above, it shows that your event is happening in " + season + " " + str(pd.to_datetime(d, errors='coerce').year) + ", and it will take approximately "+str(predictedWeeks) + " weeks to get "+str(
-#             totalBookings) + " bookings. The table above shows the weekly start date, weeks to event, predicted weekly bookings, the cummulative bookings, and the percentage bookings per week, while the line chart above shows the predicted weekly bookings against the weekly dates"
-
-#         st.markdown(text[0])
-#         st.markdown("In summary, if the cummulative booking is higher than your booking data after 70% of the booking period, you should perhaps start thinking of promotion or reducing the size of your venue depending on the observed differences.")
-#         st.markdown("However, if the cummulative booking is lower than your booking data after 70% of the booking period, you should perhaps start thinking of increasing the size of your venue depending on the observed differences.")
-
-
 with st.container():
     # Input for users to select their event date
     d = st.date_input(

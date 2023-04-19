@@ -133,18 +133,4 @@ with st.container():
     total_Booking.columns = ['Season', 'Average Booking Weeks']
     st.bar_chart(total_Booking, x='Season', y='Average Booking Weeks')
 
-# with st.container():
-#     chart = (
-#     alt.Chart(summaryDF())
-#     .mark_bar()
-#     .encode(
-#         alt.X("Season:O"),
-#         alt.Y("TotalWeeksToSell"),
-#         alt.Color("Nucleotide:O"),
-#         alt.Tooltip(["Season", "TotalWeeksToSell"]),
-#     )
-#     .interactive()
-# )
-# st.altair_chart(chart)
-
 st.button("Re-run")
