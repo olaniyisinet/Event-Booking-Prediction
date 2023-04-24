@@ -131,7 +131,7 @@ with st.container():
 
         totalBookings = weeks_df_predict['Booking Predictions'].sum()
         st.success("Based on your selected booking period of "+ str(option) +
-                   " weeks, the total number of preditcted bookings for your event is: " + str(totalBookings), icon="ℹ️")
+                   " weeks, the total number of predicted bookings for your event is: " + str(totalBookings), icon="ℹ️")
 
         with st.container():
             # col1, col2 = st.columns(2)
